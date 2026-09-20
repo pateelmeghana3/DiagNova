@@ -6,9 +6,14 @@ from components.patient_form import patient_information
 from components.upload import upload_image
 from components.prediction import prediction_section
 from components.history import show_history
+from components.brain_prediction import brain_prediction_section
+from components.skin_prediction import skin_prediction_section
 
 
+# --------------------------------------------------
 # Page Configuration
+# --------------------------------------------------
+
 st.set_page_config(
     page_title="DiagNova",
     page_icon="🩺",
@@ -16,40 +21,47 @@ st.set_page_config(
 )
 
 
+# --------------------------------------------------
 # Session State
+# --------------------------------------------------
+
 if "history" not in st.session_state:
     st.session_state.history = []
 
 
+# --------------------------------------------------
 # Sidebar
-show_sidebar()
+# --------------------------------------------------
+
+selected_module = show_sidebar()
 
 
-# Logo & Header
+# --------------------------------------------------
+# Logo
+# --------------------------------------------------
+
 logo_path = os.path.join(
     os.path.dirname(__file__),
     "assets",
     "logo.png"
 )
 
+
 col1, col2 = st.columns([1, 5])
 
+
 with col1:
+
     st.image(
         logo_path,
-        width=110
+        width=150
     )
 
+
 with col2:
+
     st.markdown(
         """
-        <h1 style="
-        color:#2563EB;
-        margin-bottom:5px;
-        ">
-        👋 Welcome to DiagNova
-        </h1>
-
         <h3 style="
         color:#3B82F6;
         margin-top:0px;
@@ -62,120 +74,315 @@ with col2:
     )
 
     st.caption(
-        "Medical Image Intelligence • Deep Learning • Computer Vision"
+        "Medical Image Intelligence • "
+        "Deep Learning • Computer Vision"
     )
+
 
 st.divider()
 
 
-# Patient Information
-patient_name, patient_age, patient_gender = patient_information()
+# ==================================================
+# PNEUMONIA DETECTION
+# ==================================================
+
+if selected_module == "🫁 Pneumonia Detection":
+
+    st.subheader(
+        "🫁 Pneumonia Detection"
+    )
 
 
-# Upload Section
-uploaded_file, image, right = upload_image()
+    patient_name, patient_age, patient_gender = (
+        patient_information()
+    )
 
 
-# Prediction Section
-if uploaded_file is not None:
-    with right:
-        prediction_section(
-            uploaded_file,
-            patient_name,
-            patient_age,
-            patient_gender
-        )
+    uploaded_file, image, right = upload_image()
 
 
-# History
+    if uploaded_file is not None:
+
+        with right:
+
+            prediction_section(
+                uploaded_file,
+                patient_name,
+                patient_age,
+                patient_gender
+            )
+
+
+# ==================================================
+# BRAIN TUMOR DETECTION
+# ==================================================
+
+elif selected_module == "🧠 Brain Tumor Detection":
+
+    st.subheader(
+        "🧠 Brain Tumor Detection"
+    )
+
+
+    patient_name, patient_age, patient_gender = (
+        patient_information()
+    )
+
+
+    uploaded_file = st.file_uploader(
+        "Upload Brain MRI Image",
+        type=[
+            "jpg",
+            "jpeg",
+            "png"
+        ],
+        key="brain_mri_upload"
+    )
+
+
+    if uploaded_file is not None:
+
+        col1, col2 = st.columns(2)
+
+
+        with col1:
+
+            st.markdown(
+                "### 🖼 Brain MRI"
+            )
+
+            st.image(
+                uploaded_file,
+                caption="Uploaded Brain MRI",
+                width="stretch"
+            )
+
+
+        with col2:
+
+            brain_prediction_section(
+                uploaded_file,
+                patient_name,
+                patient_age,
+                patient_gender
+            )
+
+
+# ==================================================
+# SKIN DISEASE DETECTION
+# ==================================================
+
+elif selected_module == "🧴 Skin Disease Detection":
+
+    st.subheader(
+        "🧴 Skin Disease Detection"
+    )
+
+
+    patient_name, patient_age, patient_gender = (
+        patient_information()
+    )
+
+
+    uploaded_file = st.file_uploader(
+        "Upload Skin Image",
+        type=[
+            "jpg",
+            "jpeg",
+            "png"
+        ],
+        key="skin_image_upload"
+    )
+
+
+    if uploaded_file is not None:
+
+        col1, col2 = st.columns(2)
+
+
+        with col1:
+
+            st.markdown(
+                "### 🖼 Skin Image"
+            )
+
+            st.image(
+                uploaded_file,
+                caption="Uploaded Skin Image",
+                width="stretch"
+            )
+
+
+        with col2:
+
+            skin_prediction_section(
+                uploaded_file,
+                patient_name,
+                patient_age,
+                patient_gender
+            )
+
+
+# ==================================================
+# UNKNOWN MODULE
+# ==================================================
+
+else:
+
+    st.info(
+        "Please select a medical image analysis "
+        "module from the sidebar."
+    )
+
+
+# ==================================================
+# Medical History
+# ==================================================
+
 show_history()
 
 
+# ==================================================
 # Project Highlights
-st.subheader("🚀 Project Highlights")
+# ==================================================
+
+st.subheader(
+    "🚀 Project Highlights"
+)
+
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     st.info(
         """
-### 🧠 AI Model
+        ### 🧠 AI Models
 
-• Custom CNN
+        • Custom CNN
 
-• Binary Classification
+        • Pneumonia Detection
 
-• Chest X-ray Analysis
-"""
+        • Brain Tumor Classification
+
+        • Skin Disease Classification
+        """
     )
+
 
 with col2:
+
     st.info(
         """
-### 💻 Technologies
+        ### 💻 Technologies
 
-• Python
+        • Python
 
-• PyTorch
+        • PyTorch
 
-• Streamlit
-"""
+        • Streamlit
+
+        • OpenCV
+
+        • Computer Vision
+        """
     )
+
 
 with col3:
+
     st.info(
         """
-### ⭐ Features
+        ### ⭐ Features
 
-• Real-time Prediction
+        • Real-time Prediction
 
-• Confidence Score
+        • Confidence Score
 
-• Interactive UI
-"""
+        • Medical History
+
+        • PDF Medical Reports
+        """
     )
+
+
+# ==================================================
+# About DiagNova
+# ==================================================
 
 st.divider()
 
 
-# About DiagNova
-st.subheader("ℹ️ About DiagNova")
+st.subheader(
+    "ℹ️ About DiagNova"
+)
+
 
 st.write(
     """
-DiagNova is an AI-powered medical image analysis platform that assists in the early detection of pneumonia from Chest X-ray images using Deep Learning.
+    DiagNova is an AI-powered medical image analysis
+    platform designed to assist in the analysis of
+    medical images using Deep Learning and Computer Vision.
 
-The project demonstrates the complete AI workflow including image preprocessing, CNN model training, evaluation, real-time prediction, and deployment through Streamlit.
+    The platform currently supports three AI modules:
 
-Its modular architecture also allows future expansion into multiple medical imaging applications.
-"""
+    • Pneumonia Detection from Chest X-ray images
+
+    • Brain Tumor Classification from Brain MRI images
+
+    • Skin Disease Classification from skin images
+
+    The project demonstrates the complete AI workflow
+    including image preprocessing, CNN model training,
+    evaluation, real-time prediction, confidence scoring,
+    medical history tracking, and PDF report generation
+    through Streamlit.
+
+    Its modular architecture allows future expansion into
+    additional medical imaging applications.
+    """
 )
+
+
+# ==================================================
+# Disclaimer
+# ==================================================
 
 st.divider()
 
 
-# Disclaimer
 st.warning(
     """
-**Disclaimer**
+    **Disclaimer**
 
-DiagNova is developed for educational and research purposes only.
+    DiagNova is developed for educational and research
+    purposes only.
 
-The predictions generated by this application are AI-assisted results and should not be considered a substitute for professional medical diagnosis.
+    The predictions generated by this application are
+    AI-assisted results and should not be considered a
+    substitute for professional medical diagnosis.
 
-Always consult a qualified healthcare professional before making clinical decisions.
-"""
+    Always consult a qualified healthcare professional
+    before making clinical decisions.
+    """
 )
+
+
+# ==================================================
+# Footer
+# ==================================================
 
 st.divider()
 
 
-# Footer
 st.markdown(
     """
-<div style="text-align:center;color:#64748B;">
-© 2026 DiagNova | AI Medical Image Analysis Platform
-</div>
-""",
+    <div style="text-align:center;">
+
+    © 2026 Pateel Meghana • DiagNova
+
+    </div>
+    """,
     unsafe_allow_html=True
 )

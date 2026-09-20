@@ -1,38 +1,38 @@
 import streamlit as st
 from datetime import datetime
 
+from src.brain_mri.brain_predict import predict_brain_image
 from components.report import generate_pdf_report
 from components.history import save_history
-from src.prediction.predict import predict_image
 
 
-def prediction_section(
+def brain_prediction_section(
     uploaded_file,
     patient_name,
     patient_age,
     patient_gender
 ):
 
-    st.subheader("🩺 AI Prediction Result")
+    st.subheader("🧠 Brain MRI Analysis")
 
     try:
 
-        # AI Prediction
-        prediction, confidence = predict_image(
+        # Brain MRI Prediction
+        prediction, confidence = predict_brain_image(
             uploaded_file
         )
 
         # Display Prediction
-        if prediction.upper() == "PNEUMONIA":
+        if prediction.lower() == "notumor":
 
-            st.error(
-                f"🫁 Prediction: {prediction.upper()}"
+            st.success(
+                f"🧠 Prediction: {prediction.upper()}"
             )
 
         else:
 
-            st.success(
-                f"🫁 Prediction: {prediction.upper()}"
+            st.error(
+                f"🧠 Prediction: {prediction.upper()}"
             )
 
         # Confidence Score
@@ -67,7 +67,7 @@ def prediction_section(
                     "Patient Name": patient_name,
                     "Age": patient_age,
                     "Gender": patient_gender,
-                    "Module": "Pneumonia",
+                    "Module": "Brain MRI",
                     "Prediction": prediction.upper(),
                     "Confidence": f"{confidence:.2f}%"
                 }
@@ -80,7 +80,7 @@ def prediction_section(
 
         st.divider()
 
-        # Generate PDF
+        # Generate PDF Report
         current_time = datetime.now()
 
         pdf_file = generate_pdf_report(
@@ -96,10 +96,10 @@ def prediction_section(
             time=current_time.strftime(
                 "%H:%M:%S"
             ),
-            report_type="Pneumonia"
+            report_type="Brain MRI"
         )
 
-        # Patient name as file name
+        # Patient Name as File Name
         safe_name = patient_name.strip().replace(
             " ",
             "_"
@@ -108,17 +108,23 @@ def prediction_section(
         if safe_name == "":
             safe_name = "Patient"
 
-        # Download PDF
+        # Download Report
         st.download_button(
             label="📄 Download Medical Report",
             data=pdf_file,
-            file_name=f"{safe_name}_Pneumonia_Report.pdf",
+            file_name=f"{safe_name}_Brain_MRI_Report.pdf",
             mime="application/pdf",
             width="stretch"
+        )
+
+        # Explanation
+        st.info(
+            "The AI model analyzes the uploaded MRI image "
+            "and predicts one of four brain MRI categories."
         )
 
     except Exception as e:
 
         st.error(
-            f"Prediction Error: {e}"
+            f"Brain MRI Prediction Error: {e}"
         )

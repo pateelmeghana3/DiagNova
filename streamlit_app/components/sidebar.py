@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def show_sidebar():
 
     with st.sidebar:
@@ -7,16 +8,16 @@ def show_sidebar():
         st.markdown(
             """
             <h2 style="text-align:center;">
-                🩺 DiagNova
+            🩺 DiagNova
             </h2>
 
             <p style="
-                text-align:center;
-                color:#64748B;
-                margin-top:-8px;
-                margin-bottom:10px;
+            text-align:center;
+            color:#64748B;
+            margin-top:-8px;
+            margin-bottom:15px;
             ">
-                Medical Image Analysis
+            Medical Image Analysis
             </p>
             """,
             unsafe_allow_html=True
@@ -26,18 +27,27 @@ def show_sidebar():
 
         st.subheader("🧬 Available Modules")
 
-        st.success("🫁 Pneumonia Detection")
-        st.info("🧴 Skin Disease (Coming Soon)")
-        st.info("🧠 Brain MRI (Coming Soon)")
+        module = st.radio(
+            "Select Module",
+            [
+                "🫁 Pneumonia Detection",
+                "🧠 Brain Tumor Detection",
+                "🧴 Skin Disease Detection"
+            ]
+        )
 
         st.markdown("---")
 
         st.subheader("👩‍💻 Developer")
 
-        st.markdown("""
-**Pateel Meghana**
+        st.write(
+            """
+            **Pateel Meghana**
 
-**B.E. CSE (AI & ML)**
+            B.E. CSE (AI & ML)
 
-**CMR Institute of Technology**
-""")
+            CMR Institute of Technology
+            """
+        )
+
+    return module
