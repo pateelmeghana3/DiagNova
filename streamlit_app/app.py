@@ -22,6 +22,54 @@ st.set_page_config(
 
 
 # --------------------------------------------------
+# Custom Styling
+# --------------------------------------------------
+
+st.markdown(
+    """
+<style>
+
+/* Main page */
+.block-container {
+    padding-top: 1.2rem;
+    padding-bottom: 1rem;
+}
+
+/* Reduce default vertical spacing */
+div[data-testid="stVerticalBlock"] {
+    gap: 0.45rem;
+}
+
+/* Reduce spacing around headings */
+h1, h2, h3 {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.35rem !important;
+}
+
+/* Reduce spacing around horizontal lines */
+hr {
+    margin-top: 0.35rem !important;
+    margin-bottom: 0.45rem !important;
+}
+
+/* Keep the main header compact */
+.diag-header h3 {
+    margin-top: 0 !important;
+    margin-bottom: 0.15rem !important;
+}
+
+.diag-header p {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+</style>
+""",
+    unsafe_allow_html=True
+)
+
+
+# --------------------------------------------------
 # Session State
 # --------------------------------------------------
 
@@ -37,7 +85,7 @@ selected_module = show_sidebar()
 
 
 # --------------------------------------------------
-# Logo
+# Logo / Header
 # --------------------------------------------------
 
 logo_path = os.path.join(
@@ -46,36 +94,32 @@ logo_path = os.path.join(
     "logo.png"
 )
 
-
-col1, col2 = st.columns([1, 5])
-
+col1, col2 = st.columns(
+    [1, 5],
+    vertical_alignment="center"
+)
 
 with col1:
 
     st.image(
         logo_path,
-        width=150
+        width=125
     )
-
 
 with col2:
 
     st.markdown(
-        """
-        <h3 style="
-        color:#3B82F6;
-        margin-top:0px;
-        margin-bottom:8px;
-        ">
-        AI-Powered Medical Image Analysis Platform
-        </h3>
-        """,
+        '<div class="diag-header">'
+        '<h3 style="color:#3B82F6;">'
+        'AI-Powered Medical Image Analysis Platform'
+        '</h3>'
+        '<p style="color:#888888;">'
+        'Medical Image Intelligence • '
+        'Deep Learning • '
+        'Computer Vision'
+        '</p>'
+        '</div>',
         unsafe_allow_html=True
-    )
-
-    st.caption(
-        "Medical Image Intelligence • "
-        "Deep Learning • Computer Vision"
     )
 
 
@@ -92,14 +136,11 @@ if selected_module == "🫁 Pneumonia Detection":
         "🫁 Pneumonia Detection"
     )
 
-
     patient_name, patient_age, patient_gender = (
         patient_information()
     )
 
-
     uploaded_file, image, right = upload_image()
-
 
     if uploaded_file is not None:
 
@@ -123,11 +164,9 @@ elif selected_module == "🧠 Brain Tumor Detection":
         "🧠 Brain Tumor Detection"
     )
 
-
     patient_name, patient_age, patient_gender = (
         patient_information()
     )
-
 
     uploaded_file = st.file_uploader(
         "Upload Brain MRI Image",
@@ -139,11 +178,9 @@ elif selected_module == "🧠 Brain Tumor Detection":
         key="brain_mri_upload"
     )
 
-
     if uploaded_file is not None:
 
         col1, col2 = st.columns(2)
-
 
         with col1:
 
@@ -156,7 +193,6 @@ elif selected_module == "🧠 Brain Tumor Detection":
                 caption="Uploaded Brain MRI",
                 width="stretch"
             )
-
 
         with col2:
 
@@ -178,11 +214,9 @@ elif selected_module == "🧴 Skin Disease Detection":
         "🧴 Skin Disease Detection"
     )
 
-
     patient_name, patient_age, patient_gender = (
         patient_information()
     )
-
 
     uploaded_file = st.file_uploader(
         "Upload Skin Image",
@@ -194,11 +228,9 @@ elif selected_module == "🧴 Skin Disease Detection":
         key="skin_image_upload"
     )
 
-
     if uploaded_file is not None:
 
         col1, col2 = st.columns(2)
-
 
         with col1:
 
@@ -211,7 +243,6 @@ elif selected_module == "🧴 Skin Disease Detection":
                 caption="Uploaded Skin Image",
                 width="stretch"
             )
-
 
         with col2:
 
@@ -250,9 +281,7 @@ st.subheader(
     "🚀 Project Highlights"
 )
 
-
 col1, col2, col3 = st.columns(3)
-
 
 with col1:
 
@@ -313,11 +342,9 @@ with col3:
 
 st.divider()
 
-
 st.subheader(
     "ℹ️ About DiagNova"
 )
-
 
 st.write(
     """
@@ -351,7 +378,6 @@ st.write(
 
 st.divider()
 
-
 st.warning(
     """
     **Disclaimer**
@@ -375,13 +401,10 @@ st.warning(
 
 st.divider()
 
-
 st.markdown(
     """
-    <div style="text-align:center;">
-
-    © 2026 Pateel Meghana • DiagNova
-
+    <div style="text-align:center; color:#888888;">
+        © 2026 Pateel Meghana • DiagNova
     </div>
     """,
     unsafe_allow_html=True
